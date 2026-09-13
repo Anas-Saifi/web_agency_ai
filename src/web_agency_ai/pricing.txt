@@ -1,0 +1,449 @@
+WEB AGENCY SERVICES & USD PRICING
+2026 CLIENT PRICE LIST
+
+All prices are indicative USD prices for professional web development services in 2026.
+Final quotes depend on scope, complexity, number of pages/screens, integrations, content,
+design requirements, technology, and timeline.
+
+============================================================
+1. WEBSITE TYPES
+============================================================
+
+1. Landing Page
+Price: $75 - $250
+Includes: 1-page marketing/lead-generation site, responsive design, CTA sections,
+contact/lead form, basic SEO setup, analytics setup.
+
+2. Starter Business Website
+Price: $250 - $600
+Includes: approximately 5-8 pages, responsive design, contact forms, basic CMS,
+basic SEO, analytics, social/WhatsApp links.
+
+3. Professional Business Website
+Price: $500 - $1,500
+Includes: custom or heavily customized design, 8-15 pages, CMS/blog,
+conversion-focused sections, analytics, SEO setup, forms and integrations.
+
+4. Corporate Website
+Price: $1,000 - $4,000+
+Includes: 15-30+ pages/templates, custom design system, CMS, advanced SEO,
+multiple forms, analytics, integrations, accessibility considerations and QA.
+
+5. Portfolio Website
+Price: $150 - $500
+Includes: project galleries, case studies, services/skills, testimonials,
+contact forms, responsive design and basic SEO.
+
+6. Blog / Content Website
+Price: $300 - $1,200
+Includes: CMS, posts, categories, authors, search, media management,
+SEO structure and content templates.
+
+7. Real Estate Website
+Price: $500 - $2,000+
+Includes: property listings, search/filtering, property pages, galleries,
+maps, agent profiles, inquiry forms and admin management.
+
+8. Restaurant Website
+Price: $250 - $800
+Includes: menu, locations, contact, reservations or ordering integration,
+offers/events, maps and mobile optimization.
+
+9. Booking / Appointment Website
+Price: $400 - $1,500+
+Includes: services, availability, calendar, booking flow, customer details,
+notifications, admin calendar and optional payments.
+
+10. Membership Website
+Price: $750 - $2,500+
+Includes: registration, login, profiles, membership tiers, protected content,
+payments/subscriptions, dashboards and role-based access.
+
+11. E-commerce Website
+Price: $500 - $3,000+
+Includes: products, variants, cart, checkout, payments, customer accounts,
+orders, coupons, shipping/tax configuration and admin.
+
+12. Advanced E-commerce Platform
+Price: $1,500 - $7,500+
+Includes: advanced catalog, custom checkout/business rules, subscriptions,
+advanced search/filtering, inventory integrations, CRM/ERP connections,
+automation and custom dashboards.
+
+13. Marketplace / Multi-Vendor Platform
+Price: $1,500 - $7,500+
+Includes: customer accounts, vendor accounts, listings, vendor dashboards,
+commissions, payments, orders, reviews, moderation and admin.
+
+14. Education / Course Platform
+Price: $800 - $4,000+
+Includes: courses, lessons, quizzes, student dashboard, instructor dashboard,
+progress tracking, certificates, payments and protected content.
+
+15. Job Portal / Directory
+Price: $800 - $3,500+
+Includes: listings, search/filtering, profiles, submissions, dashboards,
+notifications, payments or subscriptions where required.
+
+16. Custom Web Application
+Price: $1,500 - $10,000+
+Includes: custom frontend, backend, database, authentication, roles,
+dashboards, workflows, APIs, admin panel and business logic.
+
+17. SaaS MVP
+Price: $1,500 - $5,000+
+Includes: marketing site, authentication, product dashboard, database,
+billing foundation, admin tools, API/backend and deployment.
+
+18. Enterprise Web Platform
+Price: $5,000 - $20,000+
+Includes: complex architecture, multiple user types, advanced permissions,
+integrations, security requirements, scalable infrastructure, testing and support.
+
+============================================================
+2. DESIGN & BRANDING SERVICES
+============================================================
+
+19. Website UI/UX Design
+Price: $150 - $1,000+
+Includes: sitemap, wireframes, user flows, high-fidelity designs and responsive
+desktop/tablet/mobile screens.
+
+20. Design System
+Price: $100 - $500+
+Includes: typography, colors, buttons, forms, cards, navigation, spacing,
+components and reusable UI rules.
+
+21. Homepage Design Only
+Price: $50 - $200
+
+22. Additional Page Design
+Price: $15 - $60 per page
+
+23. Logo / Basic Brand Identity
+Price: $50 - $250
+
+24. Website Redesign
+Price: $500 - $3,500+
+Includes: UX review, new visual direction, responsive redesign, implementation,
+migration considerations and QA.
+
+25. Animation / Advanced Interaction
+Price: $50 - $500+
+Depending on number and complexity of animations/interactions.
+
+============================================================
+3. DEVELOPMENT & FUNCTIONALITY
+============================================================
+
+26. Additional Website Page
+Price: $15 - $50 per page
+
+27. Custom Frontend Component
+Price: $30 - $150 each
+
+28. Custom Backend Module
+Price: $50 - $300 each
+
+29. Custom Admin Dashboard
+Price: $200 - $1,000+
+
+30. User Authentication
+Price: $75 - $300
+Includes registration, login, password reset and email verification.
+
+31. Role-Based Access Control
+Price: $75 - $350
+
+32. User Profile System
+Price: $75 - $300
+
+33. Search & Filtering
+Price: $50 - $300+
+
+34. Advanced Search
+Price: $150 - $750+
+Includes complex filters, ranking, indexing or specialized search behavior.
+
+35. Custom Calculator / Estimator
+Price: $50 - $300+
+
+36. Custom Form
+Price: $25 - $100 each
+
+37. Multi-Step Form
+Price: $75 - $250
+
+38. Booking System
+Price: $150 - $750+
+
+39. Appointment Calendar
+Price: $100 - $500+
+
+40. Notifications System
+Price: $50 - $250+
+Includes email, SMS, push or in-app notifications depending on requirements.
+
+41. Dashboard / Analytics Screen
+Price: $75 - $350 per dashboard/module
+
+42. File Upload / Document Management
+Price: $75 - $400+
+
+============================================================
+4. E-COMMERCE SERVICES
+============================================================
+
+43. Product Catalog Setup
+Price: $50 - $300+
+
+44. Shopping Cart
+Price: $75 - $250
+
+45. Checkout System
+Price: $100 - $400
+
+46. Payment Gateway Integration
+Price: $50 - $200 per gateway
+
+47. Subscription / Recurring Payments
+Price: $150 - $500+
+
+48. Coupon / Discount System
+Price: $50 - $200
+
+49. Shipping Integration
+Price: $75 - $300+
+
+50. Tax Configuration
+Price: $30 - $150
+
+51. Inventory Integration
+Price: $150 - $750+
+
+52. Order Management
+Price: $100 - $500+
+
+53. Customer Account Area
+Price: $75 - $300
+
+54. Product Import / Migration
+Price: $50 - $500+ depending on volume and source format
+
+============================================================
+5. API & THIRD-PARTY INTEGRATIONS
+============================================================
+
+55. Standard API Integration
+Price: $50 - $250 per integration
+
+56. Complex API Integration
+Price: $200 - $800+ per integration
+
+57. CRM Integration
+Price: $100 - $500+
+
+58. ERP Integration
+Price: $250 - $1,500+
+
+59. Email Marketing Integration
+Price: $30 - $150
+
+60. WhatsApp Integration
+Price: $50 - $250+
+
+61. Google Maps Integration
+Price: $30 - $150
+
+62. Calendar Integration
+Price: $50 - $200
+
+63. Social Media Integration
+Price: $30 - $150
+
+64. Analytics / Tracking Integration
+Price: $30 - $150
+
+65. Custom API Development
+Price: $200 - $1,500+
+
+============================================================
+6. SEO & CONTENT SERVICES
+============================================================
+
+66. Basic Technical SEO Setup
+Price: $50 - $200
+Includes: metadata, sitemap, robots.txt, indexing setup, basic technical checks.
+
+67. Advanced Technical SEO
+Price: $200 - $750+
+
+68. SEO Audit
+Price: $50 - $250
+
+69. On-Page SEO
+Price: $10 - $50 per page
+
+70. SEO Content Writing
+Price: $10 - $50 per page/article
+
+71. Blog Content Package
+Price: $50 - $250 per month
+
+72. Local SEO Setup
+Price: $50 - $250
+
+73. SEO Migration / Redirect Mapping
+Price: $100 - $500+
+
+============================================================
+7. AI SERVICES
+============================================================
+
+74. AI Chatbot
+Price: $250 - $1,000+
+
+75. Website AI Assistant
+Price: $300 - $1,500+
+
+76. AI Knowledge-Base / RAG Assistant
+Price: $500 - $2,500+
+
+77. AI Lead Qualification
+Price: $200 - $800+
+
+78. AI Workflow Automation
+Price: $300 - $1,500+
+
+79. Custom AI Feature
+Price: $300 - $2,500+
+
+80. AI API Integration
+Price: $75 - $500+
+
+Note: AI model/API usage fees are normally billed separately.
+
+============================================================
+8. PERFORMANCE, SECURITY & QA
+============================================================
+
+81. Website Speed Optimization
+Price: $50 - $300+
+
+82. Advanced Performance Optimization
+Price: $200 - $750+
+
+83. Security Hardening
+Price: $50 - $300
+
+84. Malware Cleanup
+Price: $30 - $150+
+
+85. Backup Setup
+Price: $20 - $100
+
+86. Monitoring Setup
+Price: $25 - $150
+
+87. Accessibility Improvements
+Price: $100 - $750+
+
+88. Cross-Browser / Device QA
+Price: $50 - $300+
+
+89. Full QA / Testing Phase
+Price: $100 - $750+
+Or approximately 15-20% of the development budget for larger builds.
+
+============================================================
+9. HOSTING, DEPLOYMENT & MAINTENANCE
+============================================================
+
+90. Website Deployment
+Price: $25 - $100
+
+91. Cloud Deployment
+Price: $50 - $300+
+
+92. Custom Cloud Infrastructure Setup
+Price: $200 - $1,000+
+
+93. Domain Setup
+Price: $10 - $30
+
+94. SSL Setup
+Price: $10 - $50
+Often free when provided by the hosting platform.
+
+95. Basic Website Maintenance
+Price: $7.5 - $15/month
+
+96. Business Website Maintenance
+Price: $15 - $30/month
+
+97. E-commerce Maintenance
+Price: $20 - $50/month
+
+98. Priority / Advanced Support
+Price: $50 - $150+/month
+
+99. Hourly Development / Maintenance
+Price: $5 - $15/hour
+
+100. Emergency Website Fix
+Price: $15 - $100+
+Final price depends on diagnosis and severity.
+
+============================================================
+10. CONTENT & MIGRATION
+============================================================
+
+101. Content Upload
+Price: $5 - $15/hour
+
+102. Product Upload
+Price: $0.1 - $1 per product depending on complexity/volume
+
+103. Website Content Migration
+Price: $50 - $500+
+
+104. Database Migration
+Price: $100 - $1,000+
+
+105. Website Migration / Platform Migration
+Price: $200 - $1,500+
+
+============================================================
+11. RECOMMENDED PACKAGE PRICES
+============================================================
+
+STARTER
+Price: $250
+Best for: small businesses and simple professional sites.
+Includes: up to 5 pages, responsive design, contact form, basic SEO,
+analytics and deployment.
+
+BUSINESS
+Price: $500
+Best for: growing businesses.
+Includes: up to 10 pages, custom design, CMS/blog, forms, analytics,
+basic SEO and standard integrations.
+
+PROFESSIONAL
+Price: $850
+Best for: businesses relying on their website for leads.
+Includes: custom UI/UX, up to 15 pages/templates, CMS, conversion-focused
+design, analytics, advanced forms, SEO foundation and integrations.
+
+E-COMMERCE
+Starting at: $750
+Best for: online stores.
+Includes: product catalog, cart, checkout, payment gateway, customer accounts,
+orders, coupons and basic shipping/tax configuration.
+
+CUSTOM WEB APP
+Starting at: $2,000
+Best for: portals, dashboards, internal systems and SaaS MVPs.
+Includes: custom frontend, backend, database, authentication, roles,
+dashboard, API integration and deployment.
+

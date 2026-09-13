@@ -1,0 +1,48 @@
+services:
+  # Web Agency AI FastAPI Backend Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-agency-ai-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DATABASE_URI=postgresql://postgres:123anas%40@localhost:5432/postgres
+    volumes:
+      # Mount token files so refreshed credentials persist on host
+      - ./src/web_agency_ai/hubspot_tokens.json:/app/src/web_agency_ai/hubspot_tokens.json
+      # Mount pricing document for real-time pricing updates without rebuild
+      - ./src/web_agency_ai/pricing.txt:/app/src/web_agency_ai/pricing.txt
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Local PostgreSQL Database for MCP Client
+  postgres:
+    image: postgres:16-alpine
+    container_name: web-agency-postgres
+    environment:
+      POSTGRES_USER: agency_user
+      POSTGRES_PASSWORD: agency_pass
+      POSTGRES_DB: web_agency_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U agency_user -d web_agency_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
