@@ -50,11 +50,14 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS middleware configuration
+# CORS middleware configuration.
+# Starlette cannot combine allow_credentials=True with allow_origins=["*"].
+_cors_origins = settings.CORS_ORIGINS
+_wildcard_cors = _cors_origins == ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
+    allow_origins=["*"] if _wildcard_cors else _cors_origins,
+    allow_credentials=not _wildcard_cors,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -12,3 +12,6 @@ wheels/
 hubspot_tokens.json
 gcp-oauth.keys.json
 google-calendar-mcp
+cloud-run-v2.json
+cloud-run.yaml
+database_uri.txt

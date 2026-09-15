@@ -1,0 +1,1 @@
+postgresql://agency_user:123anassaifi@/web_agency_db?host=/cloudsql/web-agency-ai-508609:asia-south1:web-agency-postgres
