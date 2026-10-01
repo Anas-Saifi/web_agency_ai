@@ -35,18 +35,20 @@ RUN uv sync --frozen --no-install-project --no-dev
 # 3. Copy source code and assets
 COPY src ./src
 COPY README.md ./
-COPY google-calendar-mcp ./google-calendar-mcp
-COPY gcp-oauth.keys.json* ./
 
 # 4. Install the package itself
 RUN uv sync --frozen --no-dev
 
+RUN npm install --prefix /opt/gcal @cocal/google-calendar-mcp
+
+ENV GOOGLE_CALENDAR_MCP_INDEX=/opt/gcal/node_modules/@cocal/google-calendar-mcp/build/index.js \
+    HUBSPOT_TOKEN_FILE=/tmp/hubspot_tokens.json \
+    GOOGLE_CALENDAR_MCP_TOKEN_PATH=/tmp/gcal_tokens.json
+
 # Expose backend port
 EXPOSE 8000
 
-# Container healthcheck
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-    CMD curl -f http://localhost:8000/api/health || exit 1
+
 
 # Default command: launch FastAPI via Uvicorn
-CMD ["uv", "run", "uvicorn", "web_agency_ai.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "cp /etc/secrets/hubspot_tokens.json /tmp/ 2>/dev/null; cp /etc/secrets/gcal_tokens.json /tmp/ 2>/dev/null; exec uvicorn web_agency_ai.api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
