@@ -44,7 +44,7 @@ nvidia_model = ChatOpenAI(
     base_url="https://api-cdn.thehive.ai/api/v3",
     temperature=0,
     api_key=os.environ.get("HIVE_API_KEY", ""),
-    streaming=True,
+    streaming=False,
     max_retries=3
 )
 
@@ -215,9 +215,11 @@ async def build_graph(mcp_client=None, checkpointer=None):
         return {"messages": [res]}
 
     def ask_node(state: State):
-        with open(PRICING_FILE_PATH, "r", encoding="utf-8") as f:
+        with open("pricing.txt", "r", encoding="utf-8") as f:
             text = f.read()
+
         ask_llm = nvidia_model
+
         prompt = ChatPromptTemplate.from_messages(
             [
                 (
@@ -234,9 +236,9 @@ async def build_graph(mcp_client=None, checkpointer=None):
                     "integration: what integrations does the client need\n"
                     "features_and_functionalities: what specific features and functionality does the client need\n"
                     "whatever information is not present, ask it\n"
-                    "if any field is none, expilicitly ask for it without assuming none\n"
+                    "if any field is none, explicitly ask for it without assuming none\n"
                     "whatever information is not present, ask it\n"
-                    "you have a full document of what the company offers: \n"
+                    "you have a full document of what the company offers:\n"
                     "{text}\n"
                     "When asking questions, list the relevant services from the document that the agency provides\n"
                     "only list the services not the prices\n"
@@ -245,12 +247,25 @@ async def build_graph(mcp_client=None, checkpointer=None):
                     "human",
                     "{user_info}"
                 )
-                
             ]
         )
+
         node_chain = prompt | ask_llm
-        msg = node_chain.invoke({"user_info": state["user_info"], "text": {text}})
-        return {"messages": [msg]}
+
+        msg = node_chain.invoke({
+            "user_info": state["user_info"],
+            "text": text
+        })
+
+    # TEMPORARY DEBUG
+    print("========== HIVE RESPONSE ==========")
+    print("TYPE:", type(msg))
+    print("CONTENT:", repr(msg.content))
+    print("ADDITIONAL_KWARGS:", repr(msg.additional_kwargs))
+    print("RESPONSE_METADATA:", repr(msg.response_metadata))
+    print("===================================")
+
+    return {"messages": [msg]}
 
     def should_continue(state: State):
         info = state["user_info"]
