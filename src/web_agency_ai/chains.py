@@ -10,6 +10,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+from langchain_core.messages import ToolMessage
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langgraph.graph import StateGraph, MessagesState, END
@@ -48,6 +53,10 @@ nvidia_model = ChatOpenAI(
     max_retries=3,
     max_tokens=4096
 )
+
+MAX_CALENDAR_ATTEMPTS = 3
+MEETING_TZ = os.getenv("MEETING_TIMEZONE", "Asia/Kolkata")
+
 
 def extract_bot_text(message) -> str:
     if isinstance(message, str):
@@ -103,6 +112,7 @@ class State(MessagesState):
     customer_interested: bool
     deal_finalised: bool
     event_created: bool
+    calendar_attempts: int
 
 
 input_prompt = ChatPromptTemplate.from_messages(
@@ -201,8 +211,10 @@ async def build_graph(mcp_client=None, checkpointer=None):
     hubspot_tool_node = ToolNode(hubspot_tools)
 
     calendar_tools = await get_calendar_tools()
-
-    llm_with_calendar_tools = nvidia_model.bind_tools(calendar_tools)
+    calendar_tools = await get_calendar_tools()
+    # print("CALENDAR TOOLS:", [t.name for t in calendar_tools])
+    create_event_tools = [t for t in calendar_tools if t.name == "create-event"] or calendar_tools
+    llm_with_calendar_tools = nvidia_model.bind_tools(create_event_tools)
 
     injection_chain = injection_prompt | llm_with_tools
 
@@ -551,50 +563,63 @@ async def build_graph(mcp_client=None, checkpointer=None):
 
 
     async def create_google_event(state: State):
+        now = datetime.now(ZoneInfo(MEETING_TZ))
+        tomorrow = (now + timedelta(days=1)).date().isoformat()
+        last_error = (state.get("calendar_tool_result") or [])[-1:]
+
         prompt = ChatPromptTemplate.from_messages(
             [
                 (
                     "system",
-                    "You are a helpful assistant that works in a website making agency\n"
-                    "Your job is to create google calendar events for the employees meeting with the clients\n"
-                    "you have the following information about the client\n"
-                    "name, company, proposal, deal_closed, budget\n"
-                    "you have to create a calendar event for the employee with the title of 'client meeting' along with the client's details\n"
-                    "the timing of the meeting should be the next consecutive day, and the meeting start time should be between 12pm to 4pm\n"
-                    "you are provided with the previous tool call result if any for context and information\n"
-                    "previous tool call result: {result}"
+                    "You are an assistant at a website-making agency.\n"
+                    "Your ONLY job is to call the create-event tool exactly once to book a client meeting.\n"
+                    "Do not call any other tool. Do not ask questions.\n"
+                    "Current date and time: {now} ({tz})\n"
+                    "Meeting date: {date} (tomorrow). Start time between 12:00 and 16:00, duration 1 hour.\n"
+                    "Use calendarId 'primary', timeZone '{tz}', title 'client meeting'.\n"
+                    "Put the client's details (name, company, proposal, budget) in the description.\n"
+                    "If a previous attempt failed, its error is here; fix the arguments and retry: {result}"
                 ),
-                (
-                    "human",
-                    "client's info: {info}\n"
-                )
+                ("human", "client's info: {info}\n"),
             ]
         )
 
-        create_event_chain = prompt | llm_with_calendar_tools
-
-        res = await create_event_chain.ainvoke({"info": state["negotiation_info"], "result": state.get("calendar_tool_result")})
-        return {"messages": [res]}
+        chain = prompt | llm_with_calendar_tools
+        res = await chain.ainvoke(
+            {
+                "now": now.strftime("%Y-%m-%d %H:%M"),
+                "tz": MEETING_TZ,
+                "date": tomorrow,
+                "result": last_error,
+                "info": state["negotiation_info"],
+            }
+        )
+        return {
+            "messages": [res],
+            "calendar_attempts": state.get("calendar_attempts", 0) + 1,
+        }
 
     calendar_tool_node = ToolNode(calendar_tools)
 
     def should_calendar_tools_continue(state: State):
-        if state["messages"][-1].tool_calls and state.get("event_created", False) == False:
+        if getattr(state["messages"][-1], "tool_calls", None):
             return "calendar_tools"
-        for msg in reversed(state["messages"]):
-            if isinstance(msg, AIMessage) and msg.tool_calls:
-                called = {tc["name"] for tc in msg.tool_calls}
-                if "create-event" in called:
-                    return "client_teller"
         return "client_teller"
 
+
     def after_calendar_tool_node(state: State):
+        # Look only at the tool results from the latest round
         for msg in reversed(state["messages"]):
-            if isinstance(msg, AIMessage) and msg.tool_calls:
-                called = {tc["name"] for tc in msg.tool_calls}
-                if "create-event" in called:
-                    return {"event_created": True}
-        return {"calendar_tool_result": [state["messages"][-1].content]}
+            if not isinstance(msg, ToolMessage):
+                break
+            if msg.name == "create-event" and msg.status != "error":
+                return {"event_created": True, "calendar_attempts": 0}
+        return {"calendar_tool_result": [str(state["messages"][-1].content)]}
+
+    def after_calendar_route(state: State):
+        if state.get("event_created") or state.get("calendar_attempts", 0) >= MAX_CALENDAR_ATTEMPTS:
+            return "client_teller"
+        return "create_google_event"
 
     def client_teller(state: State):
         prompt = ChatPromptTemplate.from_messages(
@@ -651,7 +676,7 @@ async def build_graph(mcp_client=None, checkpointer=None):
     build.add_conditional_edges("crm_injection_node", should_crm_call, path_map = {"hubspot_tool_node": "hubspot_tool_node", END: END, "create_google_event": "create_google_event"})
     build.add_node("after_calendar_tool_node", after_calendar_tool_node)
     build.add_edge("calendar_tools", "after_calendar_tool_node")
-    build.add_edge("after_calendar_tool_node", "create_google_event")
+    build.add_conditional_edges("after_calendar_tool_node", after_calendar_route, path_map={"client_teller": "client_teller", "create_google_event": "create_google_event"},)
     build.add_edge("finalisation_node", END)
     build.add_edge("client_teller", END)
 
