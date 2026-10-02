@@ -206,8 +206,18 @@ async def build_graph(mcp_client=None, checkpointer=None):
     injection_chain = injection_prompt | llm_with_tools
 
     def input_node(state: State):
-        res = input_chain.invoke(f"current state: {state}, user's message: {state['messages']}\n" f"Extract any missing field this message answers and ONLY respond with json schema: {parser.get_format_instructions()}.")
+        res = input_chain.invoke(
+            f"current state: {state}, user's message: {state['messages']}\n"
+            f"Extract any missing field this message answers and "
+            f"ONLY respond with json schema: {parser.get_format_instructions()}."
+        )
+
+        print("========== INPUT MODEL RESPONSE ==========")
+        print(repr(res.content))
+        print("==========================================")
+
         user_info = parser.parse(res.content)
+
         return {"user_info": user_info}
 
     async def injection_node(state: State):
@@ -256,6 +266,8 @@ async def build_graph(mcp_client=None, checkpointer=None):
             "user_info": state["user_info"],
             "text": text
         })
+
+        return {"messages": [msg]}
 
     # TEMPORARY DEBU
 
