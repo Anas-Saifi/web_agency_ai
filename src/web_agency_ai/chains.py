@@ -45,7 +45,8 @@ nvidia_model = ChatOpenAI(
     temperature=0,
     api_key=os.environ.get("HIVE_API_KEY", ""),
     streaming=True,
-    max_retries=3
+    max_retries=3,
+    max_tokens=4096
 )
 
 def extract_bot_text(message) -> str:
