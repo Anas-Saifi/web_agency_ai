@@ -266,6 +266,8 @@ async def build_graph(mcp_client=None, checkpointer=None):
                     "you have a full document of what the company offers:\n"
                     "When asking questions, list the relevant services from the document that the agency provides\n"
                     "only list the services not the prices\n"
+                    "act as a sales man to the client\n"
+                    "only ask for information that i have listed, nothing more\n"
                 ),
                 (
                     "human",
