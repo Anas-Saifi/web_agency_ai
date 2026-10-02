@@ -264,7 +264,6 @@ async def build_graph(mcp_client=None, checkpointer=None):
                     "if any field is none, explicitly ask for it without assuming none\n"
                     "whatever information is not present, ask it\n"
                     "you have a full document of what the company offers:\n"
-                    "{text}\n"
                     "When asking questions, list the relevant services from the document that the agency provides\n"
                     "only list the services not the prices\n"
                 ),
@@ -279,7 +278,6 @@ async def build_graph(mcp_client=None, checkpointer=None):
 
         msg = node_chain.invoke({
             "user_info": state["user_info"],
-            "text": text
         })
 
         return {"messages": [msg]}
