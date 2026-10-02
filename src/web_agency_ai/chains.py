@@ -213,7 +213,9 @@ async def build_graph(mcp_client=None, checkpointer=None):
         )
 
         print("========== INPUT MODEL RESPONSE ==========")
-        print(repr(res.content))
+        print("TYPE:", type(res))
+        print("CONTENT:", repr(res.content))
+        print("FULL RESPONSE:", repr(res))
         print("==========================================")
 
         user_info = parser.parse(res.content)
