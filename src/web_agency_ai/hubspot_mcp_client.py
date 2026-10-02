@@ -261,38 +261,37 @@ class HubSpotMCPClient:
 
         return code, state
 
-    async def connect(self):
-        if self.session is not None:
-            return self.session
+        async def connect(self):
+            if self.session is not None:
+                return self.session
 
-        self.http_client = httpx.AsyncClient(
-        auth=HubSpotBearerAuth(self.storage),
-        follow_redirects=True,
-    )
-
-        try:
-            read_stream, write_stream, _ = (
-                await self.stream_context.__aenter__()
+            self.http_client = httpx.AsyncClient(
+                auth=HubSpotBearerAuth(self.storage),
+                follow_redirects=True,
             )
 
-            self.session = ClientSession(
-                read_stream,
-                write_stream,
+            self.stream_context = streamable_http_client(
+                HUBSPOT_MCP_URL,
+                http_client=self.http_client,
             )
 
-            await self.session.__aenter__()
+            try:
+                read_stream, write_stream, _ = (
+                    await self.stream_context.__aenter__()
+                )
 
-            await self.session.initialize()
+                self.session = ClientSession(read_stream, write_stream)
+                await self.session.__aenter__()
+                await self.session.initialize()
 
-            print("\nConnected to HubSpot MCP!\n")
+                print("\nConnected to HubSpot MCP!\n")
+                return self.session
 
-            return self.session
+            except BaseException:
+                await self.close()
+                raise
 
-        except BaseException as exc:
-            await self.close()
-            raise exc
 
-            
     async def close(self):
         if self.session is not None:
             await self.session.__aexit__(
