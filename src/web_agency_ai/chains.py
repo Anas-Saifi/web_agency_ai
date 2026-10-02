@@ -260,6 +260,7 @@ async def build_graph(mcp_client=None, checkpointer=None):
                     "website_target: What is the target of the website\n"
                     "integration: what integrations does the client need\n"
                     "features_and_functionalities: what specific features and functionality does the client need\n"
+                    "email: email of the client\n"
                     "whatever information is not present, ask it\n"
                     "if any field is none, explicitly ask for it without assuming none\n"
                     "whatever information is not present, ask it\n"
