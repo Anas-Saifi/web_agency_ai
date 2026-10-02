@@ -311,10 +311,10 @@ class HubSpotMCPClient:
         except BaseException as exc:
             await self.close()
             raise exc
-    async with httpx.AsyncClient() as c:
-        r = await c.get(f"{HUBSPOT_MCP_URL}/.well-known/oauth-authorization-server")
-        r.raise_for_status()
-        oauth_provider.context.oauth_metadata = OAuthMetadata.model_validate(r.json())
+        async with httpx.AsyncClient() as c:
+            r = await c.get(f"{HUBSPOT_MCP_URL}/.well-known/oauth-authorization-server")
+            r.raise_for_status()
+            oauth_provider.context.oauth_metadata = OAuthMetadata.model_validate(r.json())
     async def close(self):
         if self.session is not None:
             await self.session.__aexit__(
