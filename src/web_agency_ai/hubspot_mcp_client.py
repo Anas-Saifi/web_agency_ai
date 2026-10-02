@@ -18,6 +18,7 @@ from mcp.shared.auth import (
     OAuthClientInformationFull,
     OAuthToken,
 )
+import asyncio
 
 load_dotenv()
 
@@ -264,31 +265,10 @@ class HubSpotMCPClient:
         if self.session is not None:
             return self.session
 
-        oauth_provider = PersistentHubSpotOAuthClientProvider(
-            server_url=HUBSPOT_MCP_URL,
-            client_metadata=OAuthClientMetadata(
-                client_name="Web Agency AI",
-                redirect_uris=[REDIRECT_URI],
-                grant_types=[
-                    "authorization_code",
-                    "refresh_token",
-                ],
-                response_types=["code"],
-            ),
-            storage=self.storage,
-            redirect_handler=self.redirect_handler,
-            callback_handler=self.callback_handler,
-        )
-
         self.http_client = httpx.AsyncClient(
-            auth=oauth_provider,
-            follow_redirects=True,
-        )
-
-        self.stream_context = streamable_http_client(
-            HUBSPOT_MCP_URL,
-            http_client=self.http_client,
-        )
+        auth=HubSpotBearerAuth(self.storage),
+        follow_redirects=True,
+    )
 
         try:
             read_stream, write_stream, _ = (
@@ -311,10 +291,8 @@ class HubSpotMCPClient:
         except BaseException as exc:
             await self.close()
             raise exc
-        async with httpx.AsyncClient() as c:
-            r = await c.get(f"{HUBSPOT_MCP_URL}/.well-known/oauth-authorization-server")
-            r.raise_for_status()
-            oauth_provider.context.oauth_metadata = OAuthMetadata.model_validate(r.json())
+
+            
     async def close(self):
         if self.session is not None:
             await self.session.__aexit__(
@@ -335,3 +313,71 @@ class HubSpotMCPClient:
         if self.http_client is not None:
             await self.http_client.aclose()
             self.http_client = None
+
+    
+
+class HubSpotBearerAuth(httpx.Auth):
+    """Headless auth: uses stored tokens, refreshes via HubSpot's real token endpoint."""
+
+    def __init__(self, storage: "HubSpotTokenStorage"):
+        self.storage = storage
+        self._token_endpoint = None
+        self._lock = asyncio.Lock()
+
+    async def _discover_endpoint(self, client: httpx.AsyncClient) -> str:
+        if self._token_endpoint is None:
+            r = await client.get(
+                f"{HUBSPOT_MCP_URL}/.well-known/oauth-authorization-server"
+            )
+            r.raise_for_status()
+            self._token_endpoint = r.json()["token_endpoint"]
+        return self._token_endpoint
+
+    async def _refresh(self) -> str:
+        old = self.storage.tokens
+        if old is None or not old.refresh_token:
+            raise RuntimeError(
+                "No HubSpot refresh token available; re-seed HUBSPOT_TOKENS_JSON"
+            )
+        async with httpx.AsyncClient() as client:
+            endpoint = await self._discover_endpoint(client)
+            r = await client.post(
+                endpoint,
+                data={
+                    "grant_type": "refresh_token",
+                    "refresh_token": old.refresh_token,
+                    "client_id": self.storage.client_info.client_id,
+                    "client_secret": self.storage.client_info.client_secret,
+                },
+            )
+        if r.status_code != 200:
+            raise RuntimeError(f"HubSpot token refresh failed: {r.status_code} {r.text}")
+        data = r.json()
+        new = OAuthToken(
+            access_token=data["access_token"],
+            token_type="Bearer",
+            expires_in=data.get("expires_in"),
+            scope=data.get("scope"),
+            refresh_token=data.get("refresh_token", old.refresh_token),
+        )
+        await self.storage.set_tokens(new)
+        return new.access_token
+
+    async def _valid_token(self) -> str:
+        tokens = await self.storage.get_tokens()
+        if tokens is None:
+            raise RuntimeError("No HubSpot tokens loaded")
+        if tokens.expires_in is None or tokens.expires_in > 60:
+            return tokens.access_token
+        return await self._refresh()
+
+    async def async_auth_flow(self, request):
+        async with self._lock:
+            token = await self._valid_token()
+        request.headers["Authorization"] = f"Bearer {token}"
+        response = yield request
+        if response.status_code == 401:
+            async with self._lock:
+                token = await self._refresh()
+            request.headers["Authorization"] = f"Bearer {token}"
+            yield request
